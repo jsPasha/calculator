@@ -1,0 +1,31 @@
+
+.Wrapper {
+  padding: 10px;
+  text-align: right;
+}
+
+.Display {
+  border: 1px solid #D1C4E9;
+  border-radius: 5px;
+  padding: 10px 10px 0;
+  background-color: #fff;
+}
+
+.DisplayInput {
+  height: 40px;
+  box-sizing: border-box;
+  text-align: right;
+  width: 100%;
+  border: 0;
+  outline: none;
+  appearance: none;
+  font-size: 24px;
+}
+
+.Small {
+  font-size: 20px;
+}
+
+.ExstraSmall {
+  font-size: 16px;
+}

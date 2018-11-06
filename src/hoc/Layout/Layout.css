@@ -1,0 +1,20 @@
+.Layout {
+  background-color: #EDE7F6;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  
+}
+
+.Body {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 320px;
+  flex-grow: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #7E57C2;
+  box-shadow: 1px 0 10px #7E57C2;
+}
