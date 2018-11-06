@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import Info from "../../components/Info/Info";
 import Display from "../../components/UI/Display/Display";
 import ControlPanel from "../../components/ControlPanel/ControlPanel";
 
@@ -23,15 +24,23 @@ const defaultState = {
 };
 
 class Calculator extends Component {
-  state = { ...defaultState };
+  state = { ...defaultState, showInfo: false };
 
   componentDidMount() {
     document.addEventListener("keydown", e => {
       let { key } = e;
-      // if (key.length > 1 && key[0] !== 'f') e.preventDefault();
+      if (key.length > 1 && key[0] === "F") return;
+
+      e.preventDefault();
+
+      this.setState({ showInfo: true });
+
       if (numbers.includes(key) || numbers.includes(+key))
         return this.handleConcat(key);
+
       if (mathActions.simple.includes(key)) return this.handleAction(key);
+      if (key === "Backspace") return this.handleDisplayAction("←");
+      if (key === "Escape") return this.handleDisplayAction("c");
       if (key === "Enter") return this.handleAction("=");
       if (key === "/") return this.handleAction("÷");
       if (key === "*") return this.handleAction("×");
@@ -73,6 +82,8 @@ class Calculator extends Component {
   handleAction = action => {
     let nextState = { ...this.state };
 
+    let actionValue;
+
     let {
       value,
       display,
@@ -107,36 +118,30 @@ class Calculator extends Component {
 
     nextState.hardAction = false;
 
+    actionValue = !prevActionValue ? display : prevActionValue;
+
     if (!actionHandled || action === "=") {
       switch (prevAction) {
         case "+":
           if (value !== null)
-            display = !prevActionValue
-              ? new Decimal(value).plus(display).toString()
-              : new Decimal(value).plus(prevActionValue).toString();
+            display = new Decimal(value).plus(actionValue).toString();
           break;
 
         case "-":
           if (value !== null) {
-            display = !prevActionValue
-              ? new Decimal(value).minus(display).toString()
-              : new Decimal(value).minus(prevActionValue).toString();
+            display = new Decimal(value).minus(actionValue).toString();
           }
           break;
 
         case "×":
           if (value !== null) {
-            display = !prevActionValue
-              ? new Decimal(value).mul(display).toString()
-              : new Decimal(value).mul(prevActionValue).toString();
+            display = new Decimal(value).mul(actionValue).toString();
           }
           break;
 
         case "÷":
           if (value !== null) {
-            display = !prevActionValue
-              ? new Decimal(value).div(display).toString()
-              : new Decimal(value).div(prevActionValue).toString();
+            display = new Decimal(value).div(actionValue).toString();
           }
           break;
 
@@ -156,7 +161,7 @@ class Calculator extends Component {
   };
 
   handleHardAction = action => {
-    let { display: d, actionString: astr, hardAction: ha } = this.state;
+    let { value: v, display: d, actionString: astr, hardAction: ha } = this.state;
     switch (action) {
       case "√":
         astr = makeString(d, astr, ha, "√");
@@ -170,8 +175,17 @@ class Calculator extends Component {
         astr = makeString(d, astr, ha, "1/");
         d = new Decimal(1).div(d).toString();
         break;
-      default:
+      case "%":
+        if (v) {
+          d = new Decimal(v).mul(d).div(100).toString();
+        } else {
+          d = 0;
+        }
+        astr = null;
         break;
+
+      default:
+        return;
     }
 
     this.setState({ display: d, actionString: astr, hardAction: true });
@@ -217,6 +231,7 @@ class Calculator extends Component {
   render() {
     return (
       <React.Fragment>
+        {this.state.showInfo ? <Info /> : null}
         <Display
           actionString={this.state.actionString}
           value={this.state.display}

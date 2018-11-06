@@ -1,0 +1,10 @@
+.Info {
+  padding: 10px 10px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Info p {
+  margin: 0;
+  font-size: 12px;
+}
